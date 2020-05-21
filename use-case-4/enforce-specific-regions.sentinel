@@ -1,0 +1,15 @@
+import "tfconfig"
+
+allowed_regions = [ "us-east-1", "us-east-2", "us-west-1", 
+                    "us-west-2", "eu-central-1", "eu-west-1", 
+                    "eu-west-2", "eu-south-1", "eu-west-3", 
+                    "eu-north-1", "us-gov-east-1", "us-gov-west-1"]
+
+violatingProviders = tfconfig.filter_attribute_not_in_list(tfconfig.providers.aws, "region", allowed_regions, true)
+
+main = rule {
+    length(violatingProviders["messages"]) is 0
+}
+
+# An attempt to satisfy the use case via more elegant means like the AZ checking example
+# Still would like to have more validation to this, like making sure the providers are aws
